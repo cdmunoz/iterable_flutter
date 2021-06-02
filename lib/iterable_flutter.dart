@@ -49,13 +49,4 @@ class IterableFlutter {
   static Future signOut() async {
     await _channel.invokeMethod('signOut');
   }
-
-  static Future canHandle({required dynamic url}) async {
-    await _channel.invokeMethod(
-      'canHandle',
-      {
-        'url': url,
-      },
-    );
-  }
 }

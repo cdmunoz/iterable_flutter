@@ -2,8 +2,9 @@ import Flutter
 import UIKit
 import IterableSDK
 
-public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
-    
+
+public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "iterable_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftIterableFlutterPlugin()
@@ -131,8 +132,6 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
 extension SwiftIterableFlutterPlugin: IterableURLDelegate {
 
     public func handle(iterableURL url: URL, inContext context: IterableActionContext) -> Bool {
-        application(UIApplication(), open: url)
-
         return true
     }
     
