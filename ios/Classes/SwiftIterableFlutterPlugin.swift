@@ -3,7 +3,7 @@ import UIKit
 import IterableSDK
 
 
-public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
+public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "iterable_flutter", binaryMessenger: registrar.messenger())
@@ -134,35 +134,27 @@ extension SwiftIterableFlutterPlugin: IterableURLDelegate {
     public func handle(iterableURL url: URL, inContext context: IterableActionContext) -> Bool {
         return true
     }
-    
+
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let webpageURL = userActivity.webpageURL else {
             return false
         }
-        
+
         return IterableAPI.handle(universalLink: webpageURL)
     }
-    
+
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         IterableAPI.register(token: deviceToken)
     }
-    
+
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         IterableAppIntegration.application(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler)
-    }
-    
-    public func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        return true
     }
 
 }
 
 extension SwiftIterableFlutterPlugin: UNUserNotificationCenterDelegate {
-    public func userNotificationCenter(_: UNUserNotificationCenter, willPresent _: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .badge, .sound])
-    }
-
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         IterableAppIntegration.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
     }
