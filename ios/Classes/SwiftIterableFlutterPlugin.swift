@@ -41,10 +41,6 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
                     }
                 case "signOut":
                     signOut()
-                case "canHandle":
-                    if let url = args["url"] as? URL {
-                        _ = canHandle(url: url)
-                    }
                 default:
                     result(FlutterMethodNotImplemented)
                 }
@@ -80,10 +76,6 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
     
     private func register(deviceToken: Data) {
         IterableAPI.register(token: deviceToken)
-    }
-    
-    private func canHandle(url: URL) -> Bool {
-        return IterableAPI.handle(universalLink: url)
     }
     
     private func registerUserNotificationCenter(center: UNUserNotificationCenter?,

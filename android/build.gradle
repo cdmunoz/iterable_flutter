@@ -37,4 +37,8 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.iterable:iterableapi:3.2.2'
+    implementation 'com.iterable:iterableapi-ui:3.2.2'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation "com.google.firebase:firebase-iid"
 }

@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
                 child: Text('Picker'),
                 onPressed: () => _getAContact(),
               ),
-              Text(_contact ?? '')
+              Text(_contact)
             ],
           ),
         ),
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   _getAContact() async {
     String contact;
     try {
-      contact = await IterableFlutter.register('');
+      contact = await IterableFlutter.initialize(apiKey: 'abc');
     } on PlatformException {
       contact = 'Failed to get contact.';
     }

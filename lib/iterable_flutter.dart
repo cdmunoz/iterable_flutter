@@ -9,11 +9,12 @@ class IterableFlutter {
     await _channel.invokeMethod('register', {'deviceToken': data});
   }
 
-  static Future initialize({required String apiKey}) async {
+  static Future initialize({required String apiKey, String? pushIntegrationName}) async {
     await _channel.invokeMethod(
       'initialize',
       {
         'apiKey': apiKey,
+        'pushIntegrationName': pushIntegrationName,
       },
     );
   }
@@ -48,5 +49,14 @@ class IterableFlutter {
 
   static Future signOut() async {
     await _channel.invokeMethod('signOut');
+  }
+
+  static Future handleAndroidMessage({required Map<String, dynamic> message}) async {
+    await _channel.invokeMethod(
+      'handleAndroidMessage',
+      {
+        'message': message,
+      },
+    );
   }
 }
