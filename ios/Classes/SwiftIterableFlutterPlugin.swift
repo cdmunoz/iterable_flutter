@@ -5,6 +5,8 @@ import IterableSDK
 
 public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
 
+    var url: URL?
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "iterable_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftIterableFlutterPlugin()
@@ -22,6 +24,8 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
                     if let deviceToken = args["deviceToken"] as? Data {
                         register(deviceToken: deviceToken)
                     }
+                case "initialUrl":
+                    result(url?.absoluteString ?? "")
                 case "initialize":
                     if let apiKey = args["apiKey"] as? String {
                         initialize(apiKey: apiKey)
@@ -124,6 +128,7 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
 extension SwiftIterableFlutterPlugin: IterableURLDelegate {
 
     public func handle(iterableURL url: URL, inContext context: IterableActionContext) -> Bool {
+        self.url = url
         return true
     }
 
@@ -144,10 +149,28 @@ extension SwiftIterableFlutterPlugin: IterableURLDelegate {
         IterableAppIntegration.application(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler)
     }
 
+    public func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        self.url = url
+        return true
+    }
+
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        if let url = launchOptions?[.url] as? URL {
+            self.url = url
+        }
+        return true
+    }
+
 }
 
 extension SwiftIterableFlutterPlugin: UNUserNotificationCenterDelegate {
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         IterableAppIntegration.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+    }
+
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification:
+    UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
     }
 }

@@ -59,4 +59,8 @@ class IterableFlutter {
       },
     );
   }
+
+  static Future<String> initialUrl() async {
+    return await _channel.invokeMethod('initialUrl');
+  }
 }
