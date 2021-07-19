@@ -128,7 +128,9 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
 extension SwiftIterableFlutterPlugin: IterableURLDelegate {
 
     public func handle(iterableURL url: URL, inContext context: IterableActionContext) -> Bool {
-        self.url = url
+        if !url.absoluteString.isEmpty {
+            self.url = url
+        }
         return true
     }
 
@@ -150,15 +152,17 @@ extension SwiftIterableFlutterPlugin: IterableURLDelegate {
     }
 
     public func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        self.url = url
+        if !url.absoluteString.isEmpty {
+            self.url = url
+        }
         return true
     }
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        if let url = launchOptions?[.url] as? URL {
-            self.url = url
-        }
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
+         if let remoteNotification = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? NSDictionary,
+            let url = remoteNotification["url"] as? String, !url.isEmpty {
+            self.url = URL(string: url)
+         }
         return true
     }
 
@@ -166,6 +170,10 @@ extension SwiftIterableFlutterPlugin: IterableURLDelegate {
 
 extension SwiftIterableFlutterPlugin: UNUserNotificationCenterDelegate {
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        if let urlString = response.notification.request.content.userInfo["url"] as? String,
+        !urlString.isEmpty {
+            self.url = URL(string: urlString)
+        }
         IterableAppIntegration.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
     }
 
