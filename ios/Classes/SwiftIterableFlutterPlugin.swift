@@ -20,8 +20,6 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin {
                     if let deviceToken = args["deviceToken"] as? Data {
                         register(deviceToken: deviceToken)
                     }
-                case "initialUrl":
-                    result(url?.absoluteString ?? "")
                 case "initialize":
                     if let apiKey = args["apiKey"] as? String {
                         initialize(apiKey: apiKey)
